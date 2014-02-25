@@ -444,8 +444,8 @@ Dragdealer.prototype = {
       snap
     );
   },
-  setValue: function(x, y, snap) {
-    this.setTargetValue([x, y || 0]);
+  setValue: function(x, y, snap, canTrigger) {
+    this.setTargetValue([x, y || 0], undefined, canTrigger);
     if (snap) {
       this.groupCopy(this.value.current, this.value.target);
       // Since the current value will be equal to the target one instantly, the
@@ -585,13 +585,15 @@ Dragdealer.prototype = {
       this.handle.style.top = String(this.offset.current[1]) + 'px';
     }
   },
-  setTargetValue: function(value, loose) {
+  setTargetValue: function(value, loose, canTrigger) {
     var target = loose ? this.getLooseValue(value) : this.getProperValue(value);
 
     this.groupCopy(this.value.target, target);
     this.offset.target = this.getOffsetsByRatios(target);
 
-    this.callTargetCallback();
+    if(typeof canTrigger === 'undefined' || canTrigger === true){
+      this.callTargetCallback();
+    }
   },
   setTargetValueByOffset: function(offset, loose) {
     var value = this.getRatiosByOffsets(offset);
